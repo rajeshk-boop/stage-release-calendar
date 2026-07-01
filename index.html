@@ -2075,7 +2075,7 @@
                 <button class="month-tab" id="tab-may" onclick="switchMonth('may')">May 2026</button>
                 <button class="month-tab" id="tab-june" onclick="switchMonth('june')">June 2026</button>
                 <button class="month-tab" id="tab-july" onclick="switchMonth('july')">July 2026</button>
-                <button class="month-tab active" id="tab-august" onclick="switchMonth('august')">August 2026</button>
+                <button class="month-tab" id="tab-august" onclick="switchMonth('august')">August 2026</button>
             </div>
         </div>
         <div class="header-right">
@@ -2485,7 +2485,9 @@ const MAY_RELEASES = [
         let julyReleases = [];
         let augustReleases = [];
         let releases = [];
-        let currentMonth = 'august';
+        const _m = new Date().getMonth() + 1;
+        const _monthMap = {3:'march',4:'april',5:'may',6:'june',7:'july',8:'august'};
+        let currentMonth = _monthMap[_m] || 'july';
         let currentView = 'list';
         let currentWeekIdx = 0;
         let currentDay = 1;
@@ -3067,10 +3069,9 @@ const MAY_RELEASES = [
                 aprilReleases = APRIL_RELEASES;
                 mayReleases   = MAY_RELEASES;
             }
-            releases = currentMonth === 'march' ? [...marchReleases] : currentMonth === 'april' ? [...aprilReleases] : currentMonth === 'may' ? [...mayReleases] : currentMonth === 'june' ? [...juneReleases] : currentMonth === 'july' ? [...julyReleases] : [...augustReleases];
             document.getElementById('fp-genre').innerHTML = '';
             document.getElementById('loadingBanner').style.display = 'none';
-            render();
+            switchMonth(currentMonth);
         }
 
         // ════════════════════════════════════════
