@@ -29,6 +29,16 @@
             --c-dubbed: #fbbf24;
         }
 
+        [data-theme="light"] {
+            --bg: #f0f0f8;
+            --surface: #ffffff;
+            --card: #f7f7fc;
+            --border: #dcdcec;
+            --text: #111126;
+            --muted: #6868a0;
+            --subtle: #e4e4f0;
+        }
+
         *, *::before, *::after {
             margin: 0;
             padding: 0;
@@ -2171,6 +2181,7 @@
         </div>
         <button class="edit-btn hidden" id="editBtn" onclick="openModal()">✏️ Edit / Add</button>
         <button class="edit-btn" id="loginBtn" onclick="showLogin()" style="background: transparent; color: var(--muted); border: 1px solid var(--border);">🔐 Admin Login</button>
+        <button class="edit-btn" id="themeToggleBtn" onclick="toggleTheme()" style="background: transparent; border: 1px solid var(--border); color: var(--muted); font-size:16px; padding: 6px 10px;">🌙</button>
     </div>
 
     <div id="listView" class="content">
@@ -4212,6 +4223,23 @@ const MAY_RELEASES = [
         }
 
         fetchData();
+
+        // ── Theme toggle ──────────────────────────
+        function toggleTheme() {
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+            const newTheme = isLight ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            document.getElementById('themeToggleBtn').textContent = newTheme === 'light' ? '☀️' : '🌙';
+            localStorage.setItem('stage-cal-theme', newTheme);
+        }
+
+        (function initTheme() {
+            const saved = localStorage.getItem('stage-cal-theme') || 'dark';
+            if (saved === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                document.getElementById('themeToggleBtn').textContent = '☀️';
+            }
+        })();
     </script>
 
 <!-- ASSET OVERLAY -->
