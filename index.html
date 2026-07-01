@@ -2613,10 +2613,11 @@ const MAY_RELEASES = [
 
             ['long','binge','feature','mini','micro'].forEach(f => {
                 const cap = f.charAt(0).toUpperCase() + f.slice(1);
-                document.getElementById('hs-' + f).textContent = data.filter(r => r.format === cap).length;
+                document.getElementById('hs-' + f).textContent = new Set(data.filter(r => r.format === cap).map(r => r.seriesTitle || r.title)).size;
             });
-            document.getElementById('hs-total').textContent = data.length;
-            document.getElementById('visCnt').textContent = data.length;
+            const uniqueSeries = new Set(data.map(r => r.seriesTitle || r.title)).size;
+            document.getElementById('hs-total').textContent = uniqueSeries;
+            document.getElementById('visCnt').textContent = uniqueSeries;
 
             const dlMap = { HR: 'dfi-hr', RJ: 'dfi-rj', BH: 'dfi-bh', GJ: 'dfi-gj', MR: 'dfi-mr' };
             let totalDlFreq = 0;
@@ -3009,9 +3010,14 @@ const MAY_RELEASES = [
             return codes.length ? codes : ['HR','RJ','BH','GJ'];
         }
 
+        function getSeriesTitle(title, format) {
+            if (format !== 'Long') return title;
+            return title.replace(/[\s\-\u2013:]*(\([^)]*\)|\bEp\.?\s*.*)$/i, '').trim() || title;
+        }
+
         function csvToReleases(rows, monthNum) {
             const out = [];
-            let curFmt = '';
+            let curFmt = 'Long';
             for (let i = 2; i < rows.length; i++) {
                 const r = rows[i];
                 const title = (r[1] || '').trim();
@@ -3038,7 +3044,8 @@ const MAY_RELEASES = [
                     : [parseReleaseDate(relDayStr, monthNum)];
                 const finalDates = parsedDates.length ? parsedDates : ['TBD'];
                 finalDates.forEach(date => {
-                    out.push({ title, genre, dialects, origDialect, date, releasePattern, format, ctype, episodes, runtime, expense, purpose: purpose || (format==='Long'?'Retention':format==='Micro'?'Re-engagement':'Acquisition'), dubbing, comment });
+                    const seriesTitle = getSeriesTitle(title, format);
+                    out.push({ title, seriesTitle, genre, dialects, origDialect, date, releasePattern, format, ctype, episodes, runtime, expense, purpose: purpose || (format==='Long'?'Retention':format==='Micro'?'Re-engagement':'Acquisition'), dubbing, comment });
                 });
             }
             return out;
