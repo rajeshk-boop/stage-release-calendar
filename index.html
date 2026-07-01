@@ -35,8 +35,78 @@
             --card: #f7f7fc;
             --border: #dcdcec;
             --text: #111126;
-            --muted: #6868a0;
+            --muted: #5858a0;
             --subtle: #e4e4f0;
+        }
+
+        /* ── Light mode overrides ─────────────────── */
+        [data-theme="light"] .col-date .day {
+            color: var(--text);
+        }
+        [data-theme="light"] .col-title .tname {
+            color: var(--text);
+        }
+        [data-theme="light"] .col-genre {
+            color: #333360;
+        }
+        [data-theme="light"] .col-pattern {
+            color: #444470;
+        }
+        [data-theme="light"] .tbl-th {
+            color: #555588;
+        }
+        [data-theme="light"] .rel-row:hover {
+            background: #ebebf7;
+            border-color: #b8b8d8;
+        }
+        [data-theme="light"] .orig-dl-badge {
+            background: rgba(0,0,0,0.05);
+        }
+        [data-theme="light"] .freq-badge {
+            background: rgba(0,0,0,0.05);
+            border-color: var(--border);
+        }
+        [data-theme="light"] .fpill.a-all {
+            background: rgba(0,0,0,0.07);
+        }
+        [data-theme="light"] .view-cnt {
+            color: var(--muted);
+        }
+        [data-theme="light"] .hstat-num {
+            color: var(--text);
+        }
+        [data-theme="light"] .dfi-num {
+            color: var(--text);
+        }
+        [data-theme="light"] .mdc-live {
+            background: #eeeef8;
+            border-color: #c8c8e0;
+        }
+        [data-theme="light"] .mcc {
+            background: rgba(0,0,0,0.06);
+        }
+        [data-theme="light"] .mcc-title {
+            color: #111126;
+        }
+        [data-theme="light"] .wg-col-head {
+            color: var(--text);
+        }
+        [data-theme="light"] .wg-dn {
+            color: var(--muted);
+        }
+        [data-theme="light"] .wg-dd {
+            color: var(--text);
+        }
+        [data-theme="light"] .dv-num {
+            color: var(--text);
+        }
+        [data-theme="light"] .nav-lbl {
+            color: var(--text);
+        }
+        [data-theme="light"] .sync-banner {
+            background: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
         }
 
         *, *::before, *::after {
