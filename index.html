@@ -2759,7 +2759,7 @@ const MAY_RELEASES = [
                         <div class="col-type"><span class="type-badge ${r.ctype}">${r.ctype}</span></div>
                         <div class="col-type">${r.dubbing ? `<span class="dubbing-badge ${dubCls}">${r.dubbing}</span>` : '<span style="color:var(--muted);font-size:11px;">—</span>'}</div>
                         <div class="col-freq"><div class="freq-num" style="color:${freqColor}">${freq}</div><div class="freq-label">freq</div></div>
-                        <div class="col-freq">${r.expense ? `<div style="font-size:13px;font-weight:600;color:var(--text);line-height:1.2;">₹${r.expense.toLocaleString('en-IN')}</div><div style="font-size:10px;color:var(--muted);">${(r.format==='Long'||r.format==='Binge')?'per ep':'total'}</div>` : '<span style="color:var(--muted);font-size:11px;">—</span>'}</div>
+                        <div class="col-freq">${r.expense ? `<div style="font-size:13px;font-weight:600;color:var(--text);line-height:1.2;">₹${r.expense.toLocaleString('en-IN')}</div><div style="font-size:10px;color:var(--muted);">${r.format==='Long'?'per ep':'total'}</div>` : '<span style="color:var(--muted);font-size:11px;">—</span>'}</div>
                         <div class="comment-cell"><input class="comment-input ${isLoggedIn?'':'comment-readonly'}" type="text" placeholder="${isLoggedIn?'Comment…':'🔒'}" data-title="${r.title}" value="${(r.comment||'').replace(/"/g,'&quot;')}" ${isLoggedIn?'onchange="const t=releases.find(x=>x.title===this.dataset.title);if(t)t.comment=this.value;"':'readonly'} onclick="event.stopPropagation()"></div>
                         </div>`;
                 }).join('');
