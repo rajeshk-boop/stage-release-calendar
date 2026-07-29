@@ -2765,13 +2765,23 @@ const MAY_RELEASES = [
                 }).join('');
 
                 // Total cost row
-                const seenSeries = new Map();
-                data.filter(r => r.expense).forEach(r => {
+                // Long: count release days in this month × episodes per day × per-ep expense
+                const longGroups = new Map();
+                data.filter(r => r.format === 'Long' && r.expense).forEach(r => {
                     const key = r.seriesTitle || r.title;
-                    if (!seenSeries.has(key)) seenSeries.set(key, r);
+                    if (!longGroups.has(key)) longGroups.set(key, { r, count: 0 });
+                    longGroups.get(key).count++;
                 });
-                const grandTotal = [...seenSeries.values()].reduce((sum, r) =>
-                    sum + (r.format === 'Long' ? r.expense * r.episodes : r.expense), 0);
+                const longTotal = [...longGroups.values()].reduce((sum, { r, count }) =>
+                    sum + count * getEpisodesPerDay(r.releasePattern) * r.expense, 0);
+                // Others: expense is total already, deduplicate by seriesTitle
+                const otherSeries = new Map();
+                data.filter(r => r.format !== 'Long' && r.expense).forEach(r => {
+                    const key = r.seriesTitle || r.title;
+                    if (!otherSeries.has(key)) otherSeries.set(key, r);
+                });
+                const otherTotal = [...otherSeries.values()].reduce((sum, r) => sum + r.expense, 0);
+                const grandTotal = longTotal + otherTotal;
                 if (grandTotal > 0) {
                     grid.innerHTML += `<div style="display:grid;grid-template-columns:80px 1fr 130px 110px 150px 90px 90px 90px 80px 100px 120px;margin-top:12px;padding:12px 0;border-top:2px solid var(--border);">
                         <div style="grid-column:1/10;text-align:right;padding-right:12px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;justify-content:flex-end;">Total Cost</div>
@@ -3031,6 +3041,14 @@ const MAY_RELEASES = [
         function getSeriesTitle(title, format) {
             if (format !== 'Long') return title;
             return title.replace(/[\s\-\u2013:]*(\([^)]*\)|\bEp\.?\s*.*)$/i, '').trim() || title;
+        }
+
+        function getEpisodesPerDay(releasePattern) {
+            const p = (releasePattern || '').toLowerCase();
+            if (/\bthree\b/.test(p) || /\b3\s*ep/.test(p)) return 3;
+            if (/\btwo\b/.test(p)   || /\b2\s*ep/.test(p)) return 2;
+            if (/\bone\b/.test(p)   || /\b1\s*ep/.test(p)) return 1;
+            return 2; // default for Long series
         }
 
         function csvToReleases(rows, monthNum) {
