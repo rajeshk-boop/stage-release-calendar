@@ -2763,6 +2763,22 @@ const MAY_RELEASES = [
                         <div class="comment-cell"><input class="comment-input ${isLoggedIn?'':'comment-readonly'}" type="text" placeholder="${isLoggedIn?'Comment…':'🔒'}" data-title="${r.title}" value="${(r.comment||'').replace(/"/g,'&quot;')}" ${isLoggedIn?'onchange="const t=releases.find(x=>x.title===this.dataset.title);if(t)t.comment=this.value;"':'readonly'} onclick="event.stopPropagation()"></div>
                         </div>`;
                 }).join('');
+
+                // Total cost row
+                const seenSeries = new Map();
+                data.filter(r => r.expense).forEach(r => {
+                    const key = r.seriesTitle || r.title;
+                    if (!seenSeries.has(key)) seenSeries.set(key, r);
+                });
+                const grandTotal = [...seenSeries.values()].reduce((sum, r) =>
+                    sum + (r.format === 'Long' ? r.expense * r.episodes : r.expense), 0);
+                if (grandTotal > 0) {
+                    grid.innerHTML += `<div style="display:grid;grid-template-columns:80px 1fr 130px 110px 150px 90px 90px 90px 80px 100px 120px;margin-top:12px;padding:12px 0;border-top:2px solid var(--border);">
+                        <div style="grid-column:1/10;text-align:right;padding-right:12px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;justify-content:flex-end;">Total Cost</div>
+                        <div style="grid-column:10/11;padding:0 10px;"><div style="font-size:15px;font-weight:700;color:var(--text);">₹${grandTotal.toLocaleString('en-IN')}</div></div>
+                        <div></div>
+                    </div>`;
+                }
             } else if (currentView === 'month') {
                 const offset = currentMonth === 'march' ? 0 : currentMonth === 'april' ? 3 : currentMonth === 'may' ? 5 : currentMonth === 'june' ? 1 : currentMonth === 'july' ? 3 : 6; // Mar=Sun, Apr=Wed, May=Fri, Jun=Mon, Jul=Wed, Aug=Sat
                 let html = '<div class="mdc mdc-empty"></div>'.repeat(offset);
