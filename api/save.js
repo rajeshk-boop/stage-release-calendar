@@ -2,10 +2,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-  const APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL;
-  if (!APPS_SCRIPT_URL) {
-    return res.status(500).json({ error: 'APPS_SCRIPT_URL not configured' });
-  }
+  const APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbyUIGcy5KGKd_ivD6dKf-tb2TnQ97q6SRWuEtMDqWX_XAQza-AOeZfwZ9B2wcbff_4/exec';
   try {
     const response = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
