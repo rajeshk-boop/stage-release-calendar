@@ -27,7 +27,7 @@ const COL = {
 };
 
 // Sheet GIDs for each month tab
-const SHEET_GIDS = { march: 1674310550, april: 1186980063, may: 866138588, june: 404386009, july: 741448647, august: 1133677531 };
+const SHEET_GIDS = { march: 1674310550, april: 1186980063, may: 866138588, june: 404386009, july: 741448647, august: 1133677531, september: 1610957861 };
 
 function doPost(e) {
   try {
