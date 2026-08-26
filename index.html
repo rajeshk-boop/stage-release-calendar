@@ -2779,7 +2779,7 @@ const MAY_RELEASES = [
                 // Total cost row
                 // Long: count release days in this month × episodes per day × per-ep expense
                 const longGroups = new Map();
-                data.filter(r => r.format === 'Long' && r.expense && r.date !== 'TBD').forEach(r => {
+                data.filter(r => r.format === 'Long' && r.expense && r.date !== 'TBD' && r.dubbing !== 'Not Recommended').forEach(r => {
                     const key = r.seriesTitle || r.title;
                     if (!longGroups.has(key)) longGroups.set(key, { r, dates: new Set() });
                     longGroups.get(key).dates.add(r.date);
@@ -2788,7 +2788,7 @@ const MAY_RELEASES = [
                     sum + dates.size * getEpisodesPerDay(r.releasePattern) * r.expense, 0);
                 // Others: expense is total already, deduplicate by seriesTitle
                 const otherSeries = new Map();
-                data.filter(r => r.format !== 'Long' && r.expense).forEach(r => {
+                data.filter(r => r.format !== 'Long' && r.expense && r.dubbing !== 'Not Recommended').forEach(r => {
                     const key = r.seriesTitle || r.title;
                     if (!otherSeries.has(key)) otherSeries.set(key, r);
                 });
@@ -3089,7 +3089,7 @@ const MAY_RELEASES = [
                 const episodes = parseInt(r[10]) || 0;
                 const runtimeMatch = String(r[11] || '').match(/(\d+)/);
                 const runtime = runtimeMatch ? parseInt(runtimeMatch[1]) : 0;
-                const dubbing = (r[12] || 'Done').trim() || 'Done';
+                const dubbing = (r[monthNum === 9 ? 13 : 12] || 'Done').trim() || 'Done';
                 const comment = (r[14] || '').trim();
                 const relDayStr = (r[5] || '').trim();
                 const rawParts = relDayStr.split(',').map(p => p.trim()).filter(Boolean);
