@@ -3071,7 +3071,10 @@ const MAY_RELEASES = [
                 const r = rows[i];
                 const title = (r[1] || '').trim();
                 if (!title) continue;
-                if (r[0] && r[0].trim()) curFmt = r[0].trim();
+                if (r[0] && r[0].trim()) {
+                    const v = r[0].trim().toLowerCase();
+                    if (v.includes('long') || v.includes('binge') || v.includes('feature') || v.includes('mini') || v.includes('micro')) curFmt = r[0].trim();
+                }
                 const format = mapFormatStr(curFmt);
                 const purpose = (r[2] || '').trim();
                 const genre = (r[3] || '').trim();
