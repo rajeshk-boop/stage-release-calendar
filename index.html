@@ -2502,7 +2502,7 @@ const MAY_RELEASES = [
         function calcFreq(format, episodes) {
             if (format === 'Feature' || format === 'Mini') return 1;
             if (format === 'Binge' || format === 'Micro') return 2;
-            if (format === 'Long') return Math.ceil(episodes / 3);
+            if (format === 'Long') return Math.max(1, Math.ceil(episodes / 3));
             return 1;
         }
 
