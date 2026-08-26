@@ -3076,11 +3076,12 @@ const MAY_RELEASES = [
                     const v = r[0].trim().toLowerCase();
                     if (v.includes('long') || v.includes('binge') || v.includes('feature') || v.includes('mini') || v.includes('micro')) curFmt = r[0].trim();
                 }
-                const format = mapFormatStr(curFmt);
+                let format = mapFormatStr(curFmt);
                 const purpose = (r[2] || '').trim();
                 const genre = (r[3] || '').trim();
                 const dialects = parseDialectStr(r[4] || '');
                 const releasePattern = (r[6] || '').trim();
+                if (format === 'Long' && !releasePattern) format = 'Feature';
                 const expense = Math.round(parseFloat((r[7] || '').replace(/[^0-9.]/g, '')) || 0);
                 const ctypeRaw = (r[8] || '').toLowerCase();
                 const ctype = ctypeRaw.includes('original') ? 'Original' : 'Acquired';
