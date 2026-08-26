@@ -2779,13 +2779,13 @@ const MAY_RELEASES = [
                 // Total cost row
                 // Long: count release days in this month × episodes per day × per-ep expense
                 const longGroups = new Map();
-                data.filter(r => r.format === 'Long' && r.expense).forEach(r => {
+                data.filter(r => r.format === 'Long' && r.expense && r.date !== 'TBD').forEach(r => {
                     const key = r.seriesTitle || r.title;
-                    if (!longGroups.has(key)) longGroups.set(key, { r, count: 0 });
-                    longGroups.get(key).count++;
+                    if (!longGroups.has(key)) longGroups.set(key, { r, dates: new Set() });
+                    longGroups.get(key).dates.add(r.date);
                 });
-                const longTotal = [...longGroups.values()].reduce((sum, { r, count }) =>
-                    sum + count * getEpisodesPerDay(r.releasePattern) * r.expense, 0);
+                const longTotal = [...longGroups.values()].reduce((sum, { r, dates }) =>
+                    sum + dates.size * getEpisodesPerDay(r.releasePattern) * r.expense, 0);
                 // Others: expense is total already, deduplicate by seriesTitle
                 const otherSeries = new Map();
                 data.filter(r => r.format !== 'Long' && r.expense).forEach(r => {
