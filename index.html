@@ -576,6 +576,10 @@
             background: rgba(6, 182, 212, 0.18);
             color: #22d3ee;
         }
+        .dtag.BEN {
+            background: rgba(251, 146, 60, 0.18);
+            color: #fb923c;
+        }
 
         .freq-badge {
             display: inline-block;
@@ -2139,6 +2143,11 @@
                         <span class="dfi-num" id="dfi-mr">—</span>
                     </div>
                     <div class="dfi-item">
+                        <span class="dfi-dot" style="background-color: #fb923c;"></span>
+                        <span class="dfi-label">BEN</span>
+                        <span class="dfi-num" id="dfi-ben">—</span>
+                    </div>
+                    <div class="dfi-item">
                         <span class="dfi-label">Tot</span>
                         <span class="dfi-num" id="dfi-total">—</span>
                     </div>
@@ -2197,6 +2206,7 @@
                 <button class="fpill" onclick="setF('dialect', 'BH', this)">BH 🟣</button>
                 <button class="fpill" onclick="setF('dialect', 'GJ', this)">GJ</button>
                 <button class="fpill" onclick="setF('dialect', 'MR', this)">MR 🔵</button>
+                <button class="fpill" onclick="setF('dialect', 'BEN', this)">BEN 🟠</button>
             </div>
         </div>
         <div class="filter-row">
@@ -2626,7 +2636,7 @@ const MAY_RELEASES = [
             document.getElementById('hs-total').textContent = uniqueSeries;
             document.getElementById('visCnt').textContent = uniqueSeries;
 
-            const dlMap = { HR: 'dfi-hr', RJ: 'dfi-rj', BH: 'dfi-bh', GJ: 'dfi-gj', MR: 'dfi-mr' };
+            const dlMap = { HR: 'dfi-hr', RJ: 'dfi-rj', BH: 'dfi-bh', GJ: 'dfi-gj', MR: 'dfi-mr', BEN: 'dfi-ben' };
             let totalDlFreq = 0;
             Object.keys(dlMap).forEach(dl => {
                 const dlFreq = data.filter(r => r.dialects.includes(dl)).reduce((a, r) => a + calcFreq(r.format, r.episodes), 0);
@@ -3048,7 +3058,7 @@ const MAY_RELEASES = [
         function parseDialectStr(val) {
             const s = String(val).trim().toLowerCase();
             if (!s || s === 'universal' || s === 'all dialects') return ['HR','RJ','BH','GJ'];
-            const codes = String(val).split(',').map(s => s.trim().toUpperCase()).filter(s => ['HR','RJ','BH','GJ','MR'].includes(s));
+            const codes = String(val).split(',').map(s => s.trim().toUpperCase()).filter(s => ['HR','RJ','BH','GJ','MR','BEN'].includes(s));
             return codes.length ? codes : ['HR','RJ','BH','GJ'];
         }
 
@@ -3181,8 +3191,8 @@ const MAY_RELEASES = [
             Mini:    {label:'Mini Film',    color:'#22c55e', grad:'linear-gradient(160deg,#051a0e 0%,#031008 50%,#0b0b18 100%)'},
             Micro:   {label:'Microdrama',   color:'#a78bfa', grad:'linear-gradient(160deg,#0e0820 0%,#080514 50%,#0b0b18 100%)'},
         };
-        const PANEL_DIAL_COLOR = {HR:'#ff5a1f',RJ:'#f59e0b',BH:'#10b981',GJ:'#a855f7',MR:'#06b6d4'};
-        const PANEL_DIAL_LABEL = {HR:'Haryanvi',RJ:'Rajasthani',BH:'Bhojpuri',GJ:'Gujarati',MR:'Marathi'};
+        const PANEL_DIAL_COLOR = {HR:'#ff5a1f',RJ:'#f59e0b',BH:'#10b981',GJ:'#a855f7',MR:'#06b6d4',BEN:'#fb923c'};
+        const PANEL_DIAL_LABEL = {HR:'Haryanvi',RJ:'Rajasthani',BH:'Bhojpuri',GJ:'Gujarati',MR:'Marathi',BEN:'Bengali'};
 
         const PANEL_DATA = {
 'jaan-legi-sonam':{
