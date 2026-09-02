@@ -3039,7 +3039,7 @@ const MAY_RELEASES = [
             const f = String(val).toLowerCase();
             if (f.includes('long')) return 'Long';
             if (f.includes('binge')) return 'Binge';
-            if (f.includes('feature')) return 'Feature';
+            if (f.includes('feature') || f.includes('film')) return 'Feature';
             if (f.includes('mini')) return 'Mini';
             if (f.includes('micro')) return 'Micro';
             return 'Feature';
@@ -3074,7 +3074,7 @@ const MAY_RELEASES = [
                 if (!title) continue;
                 if (r[0] && r[0].trim()) {
                     const v = r[0].trim().toLowerCase();
-                    if (v.includes('long') || v.includes('binge') || v.includes('feature') || v.includes('mini') || v.includes('micro')) curFmt = r[0].trim();
+                    if (v.includes('long') || v.includes('binge') || v.includes('feature') || v.includes('film') || v.includes('mini') || v.includes('micro')) curFmt = r[0].trim();
                 }
                 let format = mapFormatStr(curFmt);
                 const purpose = (r[2] || '').trim();
