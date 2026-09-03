@@ -40,10 +40,10 @@
         }
 
         /* ── Light mode overrides ─────────────────── */
-        .brand-logo-dark { display: block; }
-        .brand-logo-light { display: none; }
-        [data-theme="light"] .brand-logo-dark { display: none; }
-        [data-theme="light"] .brand-logo-light { display: block; }
+        .brand-logo-dark { display: block !important; }
+        .brand-logo-light { display: none !important; }
+        [data-theme="light"] .brand-logo-dark { display: none !important; }
+        [data-theme="light"] .brand-logo-light { display: block !important; }
         [data-theme="light"] .brand-sub { color: rgba(0,0,0,0.45); }
         [data-theme="light"] .col-date .day {
             color: var(--text);
