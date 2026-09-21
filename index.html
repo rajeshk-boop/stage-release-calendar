@@ -2083,6 +2083,7 @@
                 <button class="month-tab" id="tab-july" onclick="switchMonth('july')">July 2026</button>
                 <button class="month-tab" id="tab-august" onclick="switchMonth('august')">August 2026</button>
                 <button class="month-tab" id="tab-september" onclick="switchMonth('september')">September 2026</button>
+                <button class="month-tab" id="tab-october" onclick="switchMonth('october')">October 2026</button>
             </div>
         </div>
         <div class="header-right">
@@ -2439,6 +2440,7 @@
         const JULY_CSV   = 'https://docs.google.com/spreadsheets/d/1awfYySdnnxPql4Bj1C7KJkjFcBGExWuki0yAI3xxhZI/export?format=csv&gid=741448647';
         const AUGUST_CSV    = 'https://docs.google.com/spreadsheets/d/1awfYySdnnxPql4Bj1C7KJkjFcBGExWuki0yAI3xxhZI/export?format=csv&gid=1133677531';
         const SEPTEMBER_CSV = 'https://docs.google.com/spreadsheets/d/1awfYySdnnxPql4Bj1C7KJkjFcBGExWuki0yAI3xxhZI/export?format=csv&gid=1610957861';
+        const OCTOBER_CSV   = 'https://docs.google.com/spreadsheets/d/1awfYySdnnxPql4Bj1C7KJkjFcBGExWuki0yAI3xxhZI/export?format=csv&gid=66275454';
 
         const MARCH_RELEASES = [
   {title:'Mahapunarjanam',    format:'Long',    genre:'Supernatural / Mystery', dialects:['RJ','BH'],           origDialect:'Haryanvi',  date:'2026-03-02', releasePattern:'Mon–Fri Daily',      ctype:'Original', episodes:20, runtime:23, purpose:'Retention',     dubbing:'Done',            comment:''},
@@ -2499,9 +2501,10 @@ const MAY_RELEASES = [
         let julyReleases = [];
         let augustReleases = [];
         let septemberReleases = [];
+        let octoberReleases = [];
         let releases = [];
         const _m = new Date().getMonth() + 1;
-        const _monthMap = {3:'march',4:'april',5:'may',6:'june',7:'july',8:'august',9:'september'};
+        const _monthMap = {3:'march',4:'april',5:'may',6:'june',7:'july',8:'august',9:'september',10:'october'};
         let currentMonth = _monthMap[_m] || 'august';
         let currentView = 'list';
         let currentWeekIdx = 0;
@@ -2520,7 +2523,7 @@ const MAY_RELEASES = [
 
         function switchMonth(month) {
             currentMonth = month;
-            releases = month === 'march' ? [...marchReleases] : month === 'april' ? [...aprilReleases] : month === 'may' ? [...mayReleases] : month === 'june' ? [...juneReleases] : month === 'july' ? [...julyReleases] : month === 'august' ? [...augustReleases] : [...septemberReleases];
+            releases = month === 'march' ? [...marchReleases] : month === 'april' ? [...aprilReleases] : month === 'may' ? [...mayReleases] : month === 'june' ? [...juneReleases] : month === 'july' ? [...julyReleases] : month === 'august' ? [...augustReleases] : month === 'september' ? [...septemberReleases] : [...octoberReleases];
             document.getElementById('tab-march').classList.toggle('active', month === 'march');
             document.getElementById('tab-april').classList.toggle('active', month === 'april');
             document.getElementById('tab-may').classList.toggle('active', month === 'may');
@@ -2528,6 +2531,7 @@ const MAY_RELEASES = [
             document.getElementById('tab-july').classList.toggle('active', month === 'july');
             document.getElementById('tab-august').classList.toggle('active', month === 'august');
             document.getElementById('tab-september').classList.toggle('active', month === 'september');
+            document.getElementById('tab-october').classList.toggle('active', month === 'october');
             document.getElementById('fp-genre').innerHTML = '';
             currentDay = 1;
             currentWeekIdx = 0;
@@ -2566,14 +2570,14 @@ const MAY_RELEASES = [
         }
 
         function navNext() {
-            const maxDay = currentMonth === 'april' || currentMonth === 'june' || currentMonth === 'september' ? 30 : 31;
+            const maxDay = currentMonth === 'april' || currentMonth === 'june' || currentMonth === 'september' || currentMonth === 'november' ? 30 : 31;
             if (currentView === 'week') currentWeekIdx = Math.min(4, currentWeekIdx + 1);
             if (currentView === 'day') currentDay = Math.min(maxDay, currentDay + 1);
             render();
         }
 
         function makeOttCard(r, day) {
-            const d = new Date(2026, currentMonth === 'march' ? 2 : currentMonth === 'april' ? 3 : currentMonth === 'may' ? 4 : currentMonth === 'june' ? 5 : currentMonth === 'july' ? 6 : currentMonth === 'august' ? 7 : 8, day);
+            const d = new Date(2026, currentMonth === 'march' ? 2 : currentMonth === 'april' ? 3 : currentMonth === 'may' ? 4 : currentMonth === 'june' ? 5 : currentMonth === 'july' ? 6 : currentMonth === 'august' ? 7 : currentMonth === 'september' ? 8 : 9, day);
             return `<div class="ott-card">
                 <div class="ott-poster ott-bg-${r.format}"><div class="ott-overlay"></div>
                 <div class="ott-poster-top"><span class="ott-fmt-tag ott-fmt-${r.format}">${FMT_LABEL[r.format]}</span></div>
@@ -2703,7 +2707,7 @@ const MAY_RELEASES = [
                 });
             });
 
-            const maxDay = currentMonth === 'april' || currentMonth === 'june' || currentMonth === 'september' ? 30 : 31;
+            const maxDay = currentMonth === 'april' || currentMonth === 'june' || currentMonth === 'september' || currentMonth === 'november' ? 30 : 31;
             const weeks = currentMonth === 'march' ? [
                 {label:'Week 1 — Mar 1–7',   dates:[1,2,3,4,5,6,7]},
                 {label:'Week 2 — Mar 8–14',  dates:[8,9,10,11,12,13,14]},
@@ -2742,10 +2746,17 @@ const MAY_RELEASES = [
                 {label:'Week 5 — Aug 29–31', dates:[29,30,31]},
             ] : [
                 {label:'Week 1 — Sep 1–7',   dates:[1,2,3,4,5,6,7]},
+
                 {label:'Week 2 — Sep 8–14',  dates:[8,9,10,11,12,13,14]},
                 {label:'Week 3 — Sep 15–21', dates:[15,16,17,18,19,20,21]},
                 {label:'Week 4 — Sep 22–28', dates:[22,23,24,25,26,27,28]},
                 {label:'Week 5 — Sep 29–30', dates:[29,30]},
+            ] : [
+                {label:'Week 1 — Oct 1–7',   dates:[1,2,3,4,5,6,7]},
+                {label:'Week 2 — Oct 8–14',  dates:[8,9,10,11,12,13,14]},
+                {label:'Week 3 — Oct 15–21', dates:[15,16,17,18,19,20,21]},
+                {label:'Week 4 — Oct 22–28', dates:[22,23,24,25,26,27,28]},
+                {label:'Week 5 — Oct 29–31', dates:[29,30,31]},
             ];
 
             if (currentView === 'list') {
@@ -2813,7 +2824,7 @@ const MAY_RELEASES = [
                     </div>`;
                 }
             } else if (currentView === 'month') {
-                const offset = currentMonth === 'march' ? 0 : currentMonth === 'april' ? 3 : currentMonth === 'may' ? 5 : currentMonth === 'june' ? 1 : currentMonth === 'july' ? 3 : currentMonth === 'august' ? 6 : 2; // Mar=Sun, Apr=Wed, May=Fri, Jun=Mon, Jul=Wed, Aug=Sat, Sep=Tue
+                const offset = currentMonth === 'march' ? 0 : currentMonth === 'april' ? 3 : currentMonth === 'may' ? 5 : currentMonth === 'june' ? 1 : currentMonth === 'july' ? 3 : currentMonth === 'august' ? 6 : currentMonth === 'september' ? 2 : 4; // Mar=Sun, Apr=Wed, May=Fri, Jun=Mon, Jul=Wed, Aug=Sat, Sep=Tue, Oct=Thu
                 let html = '<div class="mdc mdc-empty"></div>'.repeat(offset);
                 for (let day = 1; day <= maxDay; day++) {
                     const rels = dm[day] || [];
@@ -2835,7 +2846,7 @@ const MAY_RELEASES = [
                 document.getElementById('navLbl').textContent = wk.label;
                 document.getElementById('weekGrid').innerHTML = wk.dates.map(day => {
                     if (day > maxDay) return `<div class="wg-col wg-empty"></div>`;
-                    const d = new Date(2026, currentMonth === 'march' ? 2 : currentMonth === 'april' ? 3 : currentMonth === 'may' ? 4 : currentMonth === 'june' ? 5 : currentMonth === 'july' ? 6 : currentMonth === 'august' ? 7 : 8, day);
+                    const d = new Date(2026, currentMonth === 'march' ? 2 : currentMonth === 'april' ? 3 : currentMonth === 'may' ? 4 : currentMonth === 'june' ? 5 : currentMonth === 'july' ? 6 : currentMonth === 'august' ? 7 : currentMonth === 'september' ? 8 : 9, day);
                     const rels = dm[day] || [];
                     return `<div class="wg-col ${rels.length > 0 ? 'has-rel' : ''}">
                         <div class="wg-col-head"><div class="wg-dn">${DAYS[d.getDay()]}</div><div class="wg-dd">${day}</div></div>
@@ -2843,7 +2854,7 @@ const MAY_RELEASES = [
                         </div>`;
                 }).join('');
             } else if (currentView === 'day') {
-                const mName = currentMonth === 'march' ? 'March' : currentMonth === 'april' ? 'April' : currentMonth === 'may' ? 'May' : currentMonth === 'june' ? 'June' : currentMonth === 'july' ? 'July' : currentMonth === 'august' ? 'August' : 'September';
+                const mName = currentMonth === 'march' ? 'March' : currentMonth === 'april' ? 'April' : currentMonth === 'may' ? 'May' : currentMonth === 'june' ? 'June' : currentMonth === 'july' ? 'July' : currentMonth === 'august' ? 'August' : currentMonth === 'september' ? 'September' : 'October';
                 document.getElementById('navLbl').textContent = `${mName} ${currentDay}, 2026`;
                 const d = new Date(2026, currentMonth === 'march' ? 2 : currentMonth === 'april' ? 3 : currentMonth === 'may' ? 4 : currentMonth === 'june' ? 5 : currentMonth === 'july' ? 6 : currentMonth === 'august' ? 7 : 8, currentDay);
                 const rels = dm[currentDay] || [];
@@ -2919,7 +2930,8 @@ const MAY_RELEASES = [
                 else if (currentMonth === 'june') juneReleases = [...releases];
                 else if (currentMonth === 'july') julyReleases = [...releases];
                 else if (currentMonth === 'august') augustReleases = [...releases];
-                else septemberReleases = [...releases];
+                else if (currentMonth === 'september') septemberReleases = [...releases];
+                else octoberReleases = [...releases];
                 populateEditList();
                 render();
                 syncToSheet();
@@ -3100,7 +3112,7 @@ const MAY_RELEASES = [
                 const episodes = parseInt(r[10]) || 0;
                 const runtimeMatch = String(r[11] || '').match(/(\d+)/);
                 const runtime = runtimeMatch ? parseInt(runtimeMatch[1]) : 0;
-                const dubbing = (r[monthNum === 9 ? 13 : 12] || 'Done').trim() || 'Done';
+                const dubbing = (r[monthNum === 9 || monthNum === 10 ? 13 : 12] || 'Done').trim() || 'Done';
                 const comment = (r[14] || '').trim();
                 const relDayStr = (r[5] || '').trim();
                 const rawParts = relDayStr.split(',').map(p => p.trim()).filter(Boolean);
@@ -3119,8 +3131,8 @@ const MAY_RELEASES = [
         async function fetchData() {
             document.getElementById('loadingBanner').style.display = 'flex';
             try {
-                const [mRes, aRes, yRes, jnRes, jlRes, agRes, spRes] = await Promise.all([fetch(MARCH_CSV), fetch(APRIL_CSV), fetch(MAY_CSV), fetch(JUNE_CSV), fetch(JULY_CSV), fetch(AUGUST_CSV), fetch(SEPTEMBER_CSV)]);
-                const [mText, aText, yText, jnText, jlText, agText, spText] = await Promise.all([mRes.text(), aRes.text(), yRes.text(), jnRes.text(), jlRes.text(), agRes.text(), spRes.text()]);
+                const [mRes, aRes, yRes, jnRes, jlRes, agRes, spRes, ocRes] = await Promise.all([fetch(MARCH_CSV), fetch(APRIL_CSV), fetch(MAY_CSV), fetch(JUNE_CSV), fetch(JULY_CSV), fetch(AUGUST_CSV), fetch(SEPTEMBER_CSV), fetch(OCTOBER_CSV)]);
+                const [mText, aText, yText, jnText, jlText, agText, spText, ocText] = await Promise.all([mRes.text(), aRes.text(), yRes.text(), jnRes.text(), jlRes.text(), agRes.text(), spRes.text(), ocRes.text()]);
                 marchReleases     = csvToReleases(parseCSV(mText),  3);
                 aprilReleases     = csvToReleases(parseCSV(aText),  4);
                 mayReleases       = csvToReleases(parseCSV(yText),  5);
@@ -3128,6 +3140,7 @@ const MAY_RELEASES = [
                 julyReleases      = csvToReleases(parseCSV(jlText), 7);
                 augustReleases    = csvToReleases(parseCSV(agText), 8);
                 septemberReleases = csvToReleases(parseCSV(spText), 9);
+                octoberReleases   = csvToReleases(parseCSV(ocText), 10);
             } catch(e) {
                 marchReleases = MARCH_RELEASES;
                 aprilReleases = APRIL_RELEASES;
