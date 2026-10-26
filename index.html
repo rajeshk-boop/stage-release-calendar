@@ -3103,10 +3103,12 @@ const MAY_RELEASES = [
         function csvToReleases(rows, monthNum) {
             const out = [];
             let curFmt = 'Long';
+            let blankStreak = 0;
             for (let i = 2; i < rows.length; i++) {
                 const r = rows[i];
                 const title = (r[1] || '').trim();
-                if (!title) continue;
+                if (!title) { if (++blankStreak >= 2) break; continue; }
+                blankStreak = 0;
                 if (r[0] && r[0].trim()) {
                     const v = r[0].trim().toLowerCase();
                     if (v.includes('long') || v.includes('binge') || v.includes('feature') || v.includes('film') || v.includes('mini') || v.includes('micro')) curFmt = r[0].trim();
@@ -3120,7 +3122,7 @@ const MAY_RELEASES = [
                 const hasCostCols = monthNum >= 9;
                 const expR7 = Math.round(parseFloat((r[7] || '').replace(/[^0-9.]/g, '')) || 0);
                 const expR8 = Math.round(parseFloat((r[8] || '').replace(/[^0-9.]/g, '')) || 0);
-                const expense = hasCostCols ? (expR7 || expR8) : expR7;
+                const expense = hasCostCols ? (format === 'Long' ? expR7 : expR8) : expR7;
                 const ctypeRaw = hasCostCols ? (r[9] || '').toLowerCase() : (r[8] || '').toLowerCase();
                 const ctype = ctypeRaw.includes('original') ? 'Original' : 'Acquired';
                 const origDialect = hasCostCols ? (r[10] || '').trim() : (r[9] || '').trim();
