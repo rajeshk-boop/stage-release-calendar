@@ -3129,8 +3129,11 @@ const MAY_RELEASES = [
                 const episodes = hasCostCols ? (parseInt(r[11]) || 0) : (parseInt(r[10]) || 0);
                 const runtimeMatch = hasCostCols ? String(r[12] || '').match(/(\d+)/) : String(r[11] || '').match(/(\d+)/);
                 const runtime = runtimeMatch ? parseInt(runtimeMatch[1]) : 0;
-                const dubbing = (r[monthNum === 9 || monthNum === 10 || monthNum === 11 ? 13 : 12] || 'Done').trim() || 'Done';
-                const comment = (r[14] || '').trim();
+                const dubCol = monthNum === 9 || monthNum === 10 || monthNum === 11 ? 13 : 12;
+                const dubRaw = (r[dubCol] || '').trim();
+                const dubAlt = (r[14] || '').trim();
+                const dubbing = (dubRaw + ' ' + dubAlt).includes('Not Recommended') ? 'Not Recommended' : (dubRaw || 'Done');
+                const comment = (r[15] || '').trim();
                 const relDayStr = (r[5] || '').trim();
                 const rawParts = relDayStr.split(',').map(p => p.trim()).filter(Boolean);
                 const parsedDates = rawParts.length > 1
