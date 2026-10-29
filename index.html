@@ -24,6 +24,7 @@
             --c-feature: #f97316;
             --c-mini: #22c55e;
             --c-micro: #a78bfa;
+            --c-ai: #06b6d4;
             --c-original: #60a5fa;
             --c-acquired: #94a3b8;
             --c-dubbed: #fbbf24;
@@ -385,6 +386,12 @@
             color: var(--c-micro);
             border-color: var(--c-micro);
             background: rgba(167, 139, 250, 0.08);
+        }
+
+        .fpill.a-AI {
+            color: var(--c-ai);
+            border-color: var(--c-ai);
+            background: rgba(6, 182, 212, 0.08);
         }
 
         .fpill.a-HR {
@@ -756,6 +763,11 @@
             color: var(--c-micro);
         }
 
+        .fmt-badge.AI {
+            background: rgba(6, 182, 212, 0.12);
+            color: var(--c-ai);
+        }
+
         .type-badge {
             display: inline-block;
             padding: 2px 8px;
@@ -1125,6 +1137,10 @@
 
         .mdc.s-Micro::before {
             background: var(--c-micro);
+        }
+
+        .mdc.s-AI::before {
+            background: var(--c-ai);
         }
 
         .mdc.s-mixed::before {
@@ -1519,6 +1535,12 @@
             background: rgba(167, 139, 250, .25);
             color: var(--c-micro);
             border: 1px solid rgba(167, 139, 250, .35);
+        }
+
+        .ott-fmt-AI {
+            background: rgba(6, 182, 212, .25);
+            color: var(--c-ai);
+            border: 1px solid rgba(6, 182, 212, .35);
         }
 
         .ott-date-num {
@@ -1931,7 +1953,7 @@
         .rel-row { position: relative; }
         .rel-row::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; opacity:0; transition:opacity .15s; background:var(--row-color,#3b82f6); }
         .rel-row.has-detail:hover::before { opacity:1; }
-        .fmt-Long{--row-color:var(--c-long)} .fmt-Binge{--row-color:var(--c-binge)} .fmt-Feature{--row-color:var(--c-feature)} .fmt-Mini{--row-color:var(--c-mini)} .fmt-Micro{--row-color:var(--c-micro)}
+        .fmt-Long{--row-color:var(--c-long)} .fmt-Binge{--row-color:var(--c-binge)} .fmt-Feature{--row-color:var(--c-feature)} .fmt-Mini{--row-color:var(--c-mini)} .fmt-Micro{--row-color:var(--c-micro)} .fmt-AI{--row-color:var(--c-ai)}
         .act-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
         .act-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 13px;border-radius:20px;border:1.5px solid;font-family:'Space Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap;background:transparent;line-height:1}
         .act-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.4);filter:brightness(1.15)}
@@ -2112,6 +2134,10 @@
                         <div class="hstat-label">Micro</div>
                     </div>
                     <div class="hstat">
+                        <div class="hstat-num" id="hs-ai">—</div>
+                        <div class="hstat-label" style="color:var(--c-ai)">AI</div>
+                    </div>
+                    <div class="hstat">
                         <div class="hstat-num" id="hs-total">—</div>
                         <div class="hstat-label">Total</div>
                     </div>
@@ -2198,6 +2224,7 @@
                 <button class="fpill" onclick="setF('format', 'Feature', this)">Feature 🎞</button>
                 <button class="fpill" onclick="setF('format', 'Mini', this)">Mini 📱</button>
                 <button class="fpill" onclick="setF('format', 'Micro', this)">Micro</button>
+                <button class="fpill" onclick="setF('format', 'AI', this)">AI Film ✦</button>
             </div>
         </div>
         <div class="filter-row">
@@ -2432,7 +2459,7 @@
     <script>
         const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
         const DAYS_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-        const FMT_LABEL = {Long:'Long Series',Binge:'Binge',Feature:'Feature',Mini:'Mini',Micro:'Micro'};
+        const FMT_LABEL = {Long:'Long Series',Binge:'Binge',Feature:'Feature',Mini:'Mini',Micro:'Micro',AI:'AI Film'};
 
         const MARCH_CSV  = 'https://docs.google.com/spreadsheets/d/1awfYySdnnxPql4Bj1C7KJkjFcBGExWuki0yAI3xxhZI/export?format=csv&gid=1674310550';
         const APRIL_CSV  = 'https://docs.google.com/spreadsheets/d/1awfYySdnnxPql4Bj1C7KJkjFcBGExWuki0yAI3xxhZI/export?format=csv&gid=1186980063';
@@ -2518,7 +2545,7 @@ const MAY_RELEASES = [
         let isLoggedIn = false;
 
         function calcFreq(format, episodes) {
-            if (format === 'Feature' || format === 'Mini') return 1;
+            if (format === 'Feature' || format === 'Mini' || format === 'AI') return 1;
             if (format === 'Binge' || format === 'Micro') return 2;
             if (format === 'Long') return Math.max(1, Math.ceil(episodes / 3));
             return 1;
@@ -2595,7 +2622,7 @@ const MAY_RELEASES = [
         }
 
         function makeWgCard(r, day) {
-            const freqColor = r.format==='Long'?'var(--c-long)':r.format==='Binge'?'var(--c-binge)':r.format==='Feature'?'var(--c-feature)':r.format==='Mini'?'var(--c-mini)':'var(--c-micro)';
+            const freqColor = r.format==='Long'?'var(--c-long)':r.format==='Binge'?'var(--c-binge)':r.format==='Feature'?'var(--c-feature)':r.format==='Mini'?'var(--c-mini)':r.format==='AI'?'var(--c-ai)':'var(--c-micro)';
             return `<div class="wg-card">
                 <div class="wg-poster wg-bg-${r.format}"><div class="wg-poster-overlay"></div>
                 <div class="wg-poster-top"><span class="ott-fmt-tag ott-fmt-${r.format}" style="font-size:8px;padding:2px 6px;">${FMT_LABEL[r.format]}</span></div>
@@ -2637,8 +2664,8 @@ const MAY_RELEASES = [
                 });
             }
 
-            ['long','binge','feature','mini','micro'].forEach(f => {
-                const cap = f.charAt(0).toUpperCase() + f.slice(1);
+            ['long','binge','feature','mini','micro','ai'].forEach(f => {
+                const cap = f === 'ai' ? 'AI' : f.charAt(0).toUpperCase() + f.slice(1);
                 document.getElementById('hs-' + f).textContent = new Set(data.filter(r => r.format === cap).map(r => r.seriesTitle || r.title)).size;
             });
             const uniqueSeries = new Set(data.map(r => r.seriesTitle || r.title)).size;
@@ -2654,23 +2681,24 @@ const MAY_RELEASES = [
             });
             document.getElementById('dfi-total').textContent = totalDlFreq;
 
-            const fmts = ['long','binge','feature','mini','micro'];
+            const fmts = ['long','binge','feature','mini','micro','ai'];
             let totalFmtFreq = 0;
             fmts.forEach(f => {
-                const cap = f.charAt(0).toUpperCase() + f.slice(1);
+                const cap = f === 'ai' ? 'AI' : f.charAt(0).toUpperCase() + f.slice(1);
                 const fq = data.filter(r => r.format === cap).reduce((a, r) => a + calcFreq(r.format, r.episodes) * r.dialects.length, 0);
-                document.getElementById('fl-' + f).textContent = fq;
+                const el = document.getElementById('fl-' + f);
+                if (el) el.textContent = fq;
                 totalFmtFreq += fq;
             });
             document.getElementById('fl-total').textContent = totalFmtFreq;
 
-            const cf = { long:0, binge:0, feature:0, mini:0, micro:0 };
+            const cf = { long:0, binge:0, feature:0, mini:0, micro:0, ai:0 };
             data.forEach(r => {
-                const f = r.format.toLowerCase();
+                const f = r.format === 'AI' ? 'ai' : r.format.toLowerCase();
                 if (cf[f] !== undefined) cf[f] += calcFreq(r.format, r.episodes);
             });
-            const cfTotal = cf.long + cf.binge + cf.feature + cf.mini + cf.micro;
-            fmts.forEach(f => document.getElementById('cf-' + f).textContent = cf[f]);
+            const cfTotal = cf.long + cf.binge + cf.feature + cf.mini + cf.micro + cf.ai;
+            fmts.forEach(f => { const el = document.getElementById('cf-' + f); if (el) el.textContent = cf[f]; });
             document.getElementById('cf-total').textContent = cfTotal;
 
             const dm = {};
@@ -2787,11 +2815,11 @@ const MAY_RELEASES = [
                     const d = new Date(r.date);
                     const dayNum = String(d.getDate()).padStart(2,'0');
                     const weekday = DAYS[d.getDay()];
-                    const freqColor = r.format==='Long'?'var(--c-long)':r.format==='Binge'?'var(--c-binge)':r.format==='Feature'?'var(--c-feature)':r.format==='Mini'?'var(--c-mini)':'var(--c-micro)';
+                    const freqColor = r.format==='Long'?'var(--c-long)':r.format==='Binge'?'var(--c-binge)':r.format==='Feature'?'var(--c-feature)':r.format==='Mini'?'var(--c-mini)':r.format==='AI'?'var(--c-ai)':'var(--c-micro)';
                     const dubCls = (r.dubbing||'').split(' ').join('-');
                     const cid = CONTENT_IDS[r.title] || null;
                     const aid = ASSETS_IDS[r.title] || null;
-                    const fmtHex = r.format==='Long'?'#3b82f6':r.format==='Binge'?'#ec4899':r.format==='Feature'?'#f97316':r.format==='Mini'?'#22c55e':'#a78bfa';
+                    const fmtHex = r.format==='Long'?'#3b82f6':r.format==='Binge'?'#ec4899':r.format==='Feature'?'#f97316':r.format==='Mini'?'#22c55e':r.format==='AI'?'#06b6d4':'#a78bfa';
                     return `<div class="rel-row${cid ? ' has-detail fmt-' + r.format : ''}"${cid ? ` style="cursor:pointer;" onclick="openPanel('${cid}')"` : ''}>
                         <div class="col-date"><div class="day">${dayNum}</div><div class="wd">${weekday}</div></div>
                         <div class="col-title"><div class="tname">${r.title}</div><div class="tags">${r.dialects.map(d => `<span class="dtag ${d}">${d}</span>`).join('')}${r.episodes > 0 ? `<span class="freq-badge">${r.episodes} eps</span>` : ''}${r.runtime ? `<span class="freq-badge" style="color:var(--muted);">⏱ ${r.runtime}m</span>` : ''}</div>${(cid||aid) ? `<div class="act-row">${cid ? `<button class="act-btn" style="color:${fmtHex};border-color:${fmtHex};background:${fmtHex}15" onclick="event.stopPropagation();openPanel('${cid}')">ℹ&nbsp;INFO</button>` : ''}${aid ? `<button class="act-btn" style="color:#fff;border-color:${fmtHex};background:${fmtHex}40" onclick="event.stopPropagation();openAssetPanel('${aid}')">📦&nbsp;ASSETS</button>` : ''}</div>` : ''}</div>
@@ -2907,7 +2935,7 @@ const MAY_RELEASES = [
 
         function populateEditList() {
             document.getElementById('editList').innerHTML = releases.map((r, i) => {
-                const freqColor = r.format==='Long'?'var(--c-long)':r.format==='Binge'?'var(--c-binge)':r.format==='Feature'?'var(--c-feature)':r.format==='Mini'?'var(--c-mini)':'var(--c-micro)';
+                const freqColor = r.format==='Long'?'var(--c-long)':r.format==='Binge'?'var(--c-binge)':r.format==='Feature'?'var(--c-feature)':r.format==='Mini'?'var(--c-mini)':r.format==='AI'?'var(--c-ai)':'var(--c-micro)';
                 return `<div class="edit-item"><div><div class="ei-title">${r.title}</div><div class="ei-date">${r.date} | ${r.format}</div></div><div style="font-family:'Bebas Neue',cursive;font-size:18px;color:${freqColor}">F${calcFreq(r.format,r.episodes)}</div><div class="ei-actions"><button class="ei-btn edit-action" onclick="editRelease(${i})">Edit</button><button class="ei-btn del-action" onclick="deleteRelease(${i})">Del</button></div></div>`;
             }).join('');
         }
@@ -3074,6 +3102,7 @@ const MAY_RELEASES = [
             const f = String(val).toLowerCase();
             if (f.includes('long')) return 'Long';
             if (f.includes('binge')) return 'Binge';
+            if (f.startsWith('ai') || f.includes('ai film') || f.includes('ai content')) return 'AI';
             if (f.includes('feature') || f.includes('film')) return 'Feature';
             if (f.includes('mini')) return 'Mini';
             if (f.includes('micro')) return 'Micro';
