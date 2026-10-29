@@ -588,6 +588,10 @@
             background: rgba(251, 146, 60, 0.18);
             color: #fb923c;
         }
+        .dtag.HIN {
+            background: rgba(99, 102, 241, 0.18);
+            color: #818cf8;
+        }
 
         .freq-badge {
             display: inline-block;
@@ -2177,6 +2181,11 @@
                         <span class="dfi-num" id="dfi-ben">—</span>
                     </div>
                     <div class="dfi-item">
+                        <span class="dfi-dot" style="background-color: #818cf8;"></span>
+                        <span class="dfi-label">HIN</span>
+                        <span class="dfi-num" id="dfi-hin">—</span>
+                    </div>
+                    <div class="dfi-item">
                         <span class="dfi-label">Tot</span>
                         <span class="dfi-num" id="dfi-total">—</span>
                     </div>
@@ -2237,6 +2246,7 @@
                 <button class="fpill" onclick="setF('dialect', 'GJ', this)">GJ</button>
                 <button class="fpill" onclick="setF('dialect', 'MR', this)">MR 🔵</button>
                 <button class="fpill" onclick="setF('dialect', 'BEN', this)">BEN 🟠</button>
+                <button class="fpill" onclick="setF('dialect', 'HIN', this)">HIN</button>
             </div>
         </div>
         <div class="filter-row">
@@ -2672,7 +2682,7 @@ const MAY_RELEASES = [
             document.getElementById('hs-total').textContent = uniqueSeries;
             document.getElementById('visCnt').textContent = uniqueSeries;
 
-            const dlMap = { HR: 'dfi-hr', RJ: 'dfi-rj', BH: 'dfi-bh', GJ: 'dfi-gj', MR: 'dfi-mr', BEN: 'dfi-ben' };
+            const dlMap = { HR: 'dfi-hr', RJ: 'dfi-rj', BH: 'dfi-bh', GJ: 'dfi-gj', MR: 'dfi-mr', BEN: 'dfi-ben', HIN: 'dfi-hin' };
             let totalDlFreq = 0;
             Object.keys(dlMap).forEach(dl => {
                 const dlFreq = data.filter(r => r.dialects.includes(dl)).reduce((a, r) => a + calcFreq(r.format, r.episodes), 0);
@@ -3112,7 +3122,12 @@ const MAY_RELEASES = [
         function parseDialectStr(val) {
             const s = String(val).trim().toLowerCase();
             if (!s || s === 'universal' || s === 'all dialects') return ['HR','RJ','BH','GJ'];
-            const codes = String(val).split(',').map(s => s.trim().toUpperCase()).filter(s => ['HR','RJ','BH','GJ','MR','BEN'].includes(s));
+            const VALID = ['HR','RJ','BH','GJ','MR','BEN','HIN'];
+            const codes = String(val).split(',').map(s => {
+                const t = s.trim().toUpperCase();
+                if (t === 'HIN' || t === 'HINDI' || t === 'HI') return 'HIN';
+                return t;
+            }).filter(t => VALID.includes(t));
             return codes.length ? codes : ['HR','RJ','BH','GJ'];
         }
 
