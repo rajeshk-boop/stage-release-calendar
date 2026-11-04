@@ -2842,7 +2842,7 @@ const MAY_RELEASES = [
                     const fmtHex = r.format==='Long'?'#3b82f6':r.format==='Binge'?'#ec4899':r.format==='Feature'?'#f97316':r.format==='Mini'?'#22c55e':r.format==='AI'?'#06b6d4':'#a78bfa';
                     return `<div class="rel-row${cid ? ' has-detail fmt-' + r.format : ''}"${cid ? ` style="cursor:pointer;" onclick="openPanel('${cid}')"` : ''}>
                         <div class="col-date"><div class="day">${dayNum}</div><div class="wd">${weekday}</div></div>
-                        <div class="col-title"><div class="tname">${r.title}</div><div class="tags">${r.dialects.map(d => `<span class="dtag ${d}">${d}</span>`).join('')}${r.episodes > 0 ? `<span class="freq-badge">${r.episodes} eps</span>` : ''}${r.runtime ? `<span class="freq-badge" style="color:var(--muted);">⏱ ${r.runtime}m</span>` : ''}</div>${(cid||aid) ? `<div class="act-row">${cid ? `<button class="act-btn" style="color:${fmtHex};border-color:${fmtHex};background:${fmtHex}15" onclick="event.stopPropagation();openPanel('${cid}')">ℹ&nbsp;INFO</button>` : ''}${aid ? `<button class="act-btn" style="color:#fff;border-color:${fmtHex};background:${fmtHex}40" onclick="event.stopPropagation();openAssetPanel('${aid}')">📦&nbsp;ASSETS</button>` : ''}</div>` : ''}</div>
+                        <div class="col-title"><div class="tname">${r.title}</div><div class="tags">${r.dialects.map(d => `<span class="dtag ${d}">${d}</span>`).join('')}${r.episodes > 0 ? `<span class="freq-badge">${r.episodes} eps</span>` : ''}${r.runtime ? `<span class="freq-badge" style="color:var(--muted);">⏱ ${r.runtime}m</span>` : ''}</div>${r.marketingManager ? `<div style="font-size:10px;color:var(--muted);margin-top:3px;">👤 ${r.marketingManager}</div>` : ''}${(cid||aid) ? `<div class="act-row">${cid ? `<button class="act-btn" style="color:${fmtHex};border-color:${fmtHex};background:${fmtHex}15" onclick="event.stopPropagation();openPanel('${cid}')">ℹ&nbsp;INFO</button>` : ''}${aid ? `<button class="act-btn" style="color:#fff;border-color:${fmtHex};background:${fmtHex}40" onclick="event.stopPropagation();openAssetPanel('${aid}')">📦&nbsp;ASSETS</button>` : ''}</div>` : ''}</div>
                         <div class="col-format"><span class="fmt-badge ${r.format}">${FMT_LABEL[r.format]}</span><div style="margin-top:5px;"><span class="orig-dl-badge">${r.origDialect||'—'}</span></div></div>
                         <div class="col-genre">${r.genre}</div>
                         <div class="col-pattern">${r.format === 'Long' ? r.releasePattern : '—'}</div>
@@ -3172,24 +3172,27 @@ const MAY_RELEASES = [
                 const purpose = (r[2] || '').trim();
                 const genre = (r[3] || '').trim();
                 const dialects = parseDialectStr(r[4] || '');
-                const releasePattern = (r[6] || '').trim();
+                const hasMMCol = monthNum === 11;
+                const marketingManager = hasMMCol ? (r[5] || '').trim() : '';
+                const relDayStr = hasMMCol ? (r[6] || '').trim() : (r[5] || '').trim();
+                const releasePattern = hasMMCol ? (r[7] || '').trim() : (r[6] || '').trim();
                 if (format === 'Long' && !releasePattern) format = 'Feature';
                 const hasCostCols = monthNum >= 9;
-                const expR7 = Math.round(parseFloat((r[7] || '').replace(/[^0-9.]/g, '')) || 0);
-                const expR8 = Math.round(parseFloat((r[8] || '').replace(/[^0-9.]/g, '')) || 0);
-                const expense = hasCostCols ? (format === 'Long' ? expR7 : expR8) : expR7;
-                const ctypeRaw = hasCostCols ? (r[9] || '').toLowerCase() : (r[8] || '').toLowerCase();
+                const o = hasMMCol ? 1 : 0;
+                const expCostEp = Math.round(parseFloat((r[7 + o] || '').replace(/[^0-9.]/g, '')) || 0);
+                const expTotal  = Math.round(parseFloat((r[8 + o] || '').replace(/[^0-9.]/g, '')) || 0);
+                const expense = hasCostCols ? (format === 'Long' ? expCostEp : expTotal) : expCostEp;
+                const ctypeRaw = hasCostCols ? (r[9 + o] || '').toLowerCase() : (r[8] || '').toLowerCase();
                 const ctype = ctypeRaw.includes('original') ? 'Original' : 'Acquired';
-                const origDialect = hasCostCols ? (r[10] || '').trim() : (r[9] || '').trim();
-                const episodes = hasCostCols ? (parseInt(r[11]) || 0) : (parseInt(r[10]) || 0);
-                const runtimeMatch = hasCostCols ? String(r[12] || '').match(/(\d+)/) : String(r[11] || '').match(/(\d+)/);
+                const origDialect = hasCostCols ? (r[10 + o] || '').trim() : (r[9] || '').trim();
+                const episodes = hasCostCols ? (parseInt(r[11 + o]) || 0) : (parseInt(r[10]) || 0);
+                const runtimeMatch = hasCostCols ? String(r[12 + o] || '').match(/(\d+)/) : String(r[11] || '').match(/(\d+)/);
                 const runtime = runtimeMatch ? parseInt(runtimeMatch[1]) : 0;
-                const dubCol = monthNum === 9 || monthNum === 10 || monthNum === 11 ? 13 : 12;
+                const dubCol = hasCostCols ? (13 + o) : 12;
                 const dubRaw = (r[dubCol] || '').trim();
-                const dubAlt = (r[14] || '').trim();
+                const dubAlt = (r[14 + o] || '').trim();
                 const dubbing = (dubRaw + ' ' + dubAlt).includes('Not Recommended') ? 'Not Recommended' : (dubRaw || 'Done');
-                const comment = (r[15] || '').trim();
-                const relDayStr = (r[5] || '').trim();
+                const comment = (r[15 + o] || '').trim();
                 const rawParts = relDayStr.split(',').map(p => p.trim()).filter(Boolean);
                 const parsedDates = rawParts.length > 1
                     ? rawParts.map(p => parseReleaseDate(p, monthNum)).filter(d => d !== 'TBD')
@@ -3197,7 +3200,7 @@ const MAY_RELEASES = [
                 const finalDates = parsedDates.length ? parsedDates : ['TBD'];
                 finalDates.forEach(date => {
                     const seriesTitle = getSeriesTitle(title, format);
-                    out.push({ title, seriesTitle, genre, dialects, origDialect, date, releasePattern, format, ctype, episodes, runtime, expense, purpose: purpose || (format==='Long'?'Retention':format==='Micro'?'Re-engagement':'Acquisition'), dubbing, comment });
+                    out.push({ title, seriesTitle, genre, dialects, origDialect, date, releasePattern, format, ctype, episodes, runtime, expense, purpose: purpose || (format==='Long'?'Retention':format==='Micro'?'Re-engagement':'Acquisition'), dubbing, comment, marketingManager });
                 });
             }
             return out;
