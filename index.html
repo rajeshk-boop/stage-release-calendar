@@ -3166,7 +3166,7 @@ const MAY_RELEASES = [
                 blankStreak = 0;
                 if (r[0] && r[0].trim()) {
                     const v = r[0].trim().toLowerCase();
-                    if (v.includes('long') || v.includes('binge') || v.includes('feature') || v.includes('film') || v.includes('mini') || v.includes('micro')) curFmt = r[0].trim();
+                    if (v.includes('long') || v.includes('binge') || v.includes('feature') || v.includes('film') || v.includes('mini') || v.includes('micro') || v.includes('ai')) curFmt = r[0].trim();
                 }
                 let format = mapFormatStr(curFmt);
                 const purpose = (r[2] || '').trim();
